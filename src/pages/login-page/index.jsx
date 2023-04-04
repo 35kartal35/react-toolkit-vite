@@ -1,9 +1,12 @@
 import { Row, Col, Form, FormControl, Button } from "react-bootstrap"
 import useApi from "../../hooks/useApi";
 import { toast } from "react-toastify";
+import { useContext } from "react";
+import { AuthTokenContext } from "../../components/context/auth-token-context-provider";
 
 export default function LoginPage() {
     const api = useApi();
+    const authTokenContextValue = useContext(AuthTokenContext)
 
     const onFormSubmit = (event) => {
         event.preventDefault();
@@ -17,6 +20,8 @@ export default function LoginPage() {
         api.post('auth/login', formJson)
             .then(response => {
                 console.log('>>api response', response)
+
+                authTokenContextValue.setToken(response.data.data.token)
                 toast("başarıyla giriş yapıldı")
             })
             .catch(err => {
