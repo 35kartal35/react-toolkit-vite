@@ -1,13 +1,37 @@
 import { Row, Col, Form, FormControl, Button } from "react-bootstrap"
+import useApi from "../../hooks/useApi";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
+    const api = useApi();
 
     const onFormSubmit = (event) => {
         event.preventDefault();
+        //
+
+
         const formData = new FormData(event.target);
         const formJson = Object.fromEntries(formData.entries());
 
         console.log('>>json datası', formJson)
+        api.post('auth/login', formJson)
+            .then(response => {
+                console.log('>>api response', response)
+                toast("başarıyla giriş yapıldı")
+            })
+            .catch(err => {
+                console.error(err)
+                toast.error('Giriş yapılamadı lütfen tekrar deneyiniz', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            })
     }
 
 

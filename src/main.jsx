@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
+import 'react-toastify/dist/ReactToastify.css';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer } from 'react-toastify';
 import App from './app';
 import { store } from "./redux/store";
 import { Provider } from 'react-redux';
@@ -10,12 +11,15 @@ import ThemeContextProvider from './components/context/theme-context-provider';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthTokenContextProvider>
-      <ThemeContextProvider>
-        <Provider store={store}>
+    <ToastContainer />
+    <Provider store={store}>
+      <AuthTokenContextProvider>
+        <ThemeContextProvider>
+
           <App />
-        </Provider>
-      </ThemeContextProvider>
-    </AuthTokenContextProvider>
+
+        </ThemeContextProvider>
+      </AuthTokenContextProvider>
+    </Provider>
   </React.StrictMode>
 )
