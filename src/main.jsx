@@ -22,4 +22,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </AuthTokenContextProvider>
     </Provider>
   </React.StrictMode>
-)
+);
