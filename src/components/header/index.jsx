@@ -1,6 +1,45 @@
+import { useContext } from "react";
+import { Badge, Button, FormLabel } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { AuthTokenContext } from "../context/auth-token-context-provider";
+import useSwal from "../../hooks/useSwal";
+import { removeUserData } from "../../redux/reducers/userSlice";
 
 export default function Header() {
+    const userState = useSelector((state) => state.userState);
+    const authTokenContextValue = useContext(AuthTokenContext);
+    const dispatch = useDispatch();
+    const swal = useSwal();
+
+    const logoutUser = () => {
+        localStorage.removeItem("token");
+        authTokenContextValue.SetToken(null);
+        dispatch(removeUserData());
+    };
+
+    const onLogoutBtnClick = () => {
+        swal
+            .fire({
+                title: (
+                    <p>
+                        <h2>Emin misiniz?</h2>
+                        <div class="alert alert-danger" role="alert">
+                            Çıkış yapmak istiyor musunuz?
+                        </div>
+                    </p>
+                ),
+                showCancelButton: true,
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    // burada çıkış yap
+                    logoutUser();
+                } else {
+                    // burada hiçbirşey yapmaya gerek yok.
+                }
+            });
+    };
     return (
         <header>
             <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
@@ -40,18 +79,35 @@ export default function Header() {
                     >
                         Blogs
                     </Link>
-                    <Link
-                        to="auth/login"
-                        class="btn btn-primary me-3 py-2 text-decoration-none"
-                    >
-                        Giriş Yap
-                    </Link>
-                    <Link
-                        to="auth/register"
-                        class="btn btn-primary py-2 text-decoration-none"
-                    >
-                        Kayıt Ol
-                    </Link>
+                    {userState.userData === null ? (
+                        <>
+                            <Link
+                                to="auth/login"
+                                class="btn btn-primary me-3 py-2 text-decoration-none"
+                            >
+                                Giriş Yap
+                            </Link>
+                            <Link
+                                to="auth/register"
+                                class="btn btn-primary py-2 text-decoration-none"
+                            >
+                                Kayıt Ol
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Badge className="p-3 bg-danger me-3">
+                                <i className="fa-solid fa-user me-2"></i>
+                                {userState.userData.fullname}
+                            </Badge>
+                            <Button variant="success" onClick={onLogoutBtnClick}>
+                                <i className="fa-solid fa-right-from-bracket me-2"></i>
+                                Çıkış Yap
+                            </Button>
+                        </>
+
+                    )}
+
                 </nav>
             </div>
         </header>
