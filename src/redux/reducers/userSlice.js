@@ -10,7 +10,7 @@ export const userSlice = createSlice({
     initialState,
     reducer: {
         setUserData: (state, action) => {
-            set.userData = action.payload
+            state.userData = action.payload
             console.log('>>Set User data Reducer Function Called', state, action)
         },
         removeUserData: (state) => {
